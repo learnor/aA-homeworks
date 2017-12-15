@@ -7,15 +7,15 @@ Instructions: implement all of the pending specs (the `it` statements without bl
 
 describe Dessert do
   let(:chef) { double("chef") }
+  subject(:dessert) { Dessert.new("ice cream", 90, "Zion") }
 
   describe "#initialize" do
-    subject(:dessert) { Dessert.new("ice cream", 3, "Zion") }
     it "sets a type" do
       expect(dessert.type).to eq("ice cream")
     end
 
     it "sets a quantity" do
-      expect(dessert.quantity).to eq(3)
+      expect(dessert.quantity).to eq(90)
     end
 
     it "starts ingredients as an empty array" do
@@ -28,24 +28,42 @@ describe Dessert do
   end
 
   describe "#add_ingredient" do
-    subject(:dessert) { Dessert.new("ice cream", 3, "Zion") }
+    # subject(:dessert) { Dessert.new("ice cream", 3, "Zion") }
     it "adds an ingredient to the ingredients array" do
-      expect { dessert.add_ingredient("eggs") }.to change { dessert.ingredients }.from([]).to(["eggs"])
+      dessert.add_ingredient("eggs")
+      expect(dessert.ingredients).to include("eggs")
     end
   end
 
   describe "#mix!" do
-    it "shuffles the ingredient array"
+    it "shuffles the ingredient array" do
+      ingredients = ["eggs", "cream", "milk", "rum", "chocolate"]
+
+      ingredients.each do |ingredient|
+        dessert.add_ingredient(ingredient)
+      end
+
+      expect(dessert.ingredients).to eq(ingredients)
+      dessert.mix!
+      expect(dessert.ingredients).to_not eq(ingredients)
+      expect(dessert.ingredients.sort).to eq(ingredients.sort)
+    end
   end
 
   describe "#eat" do
-    it "subtracts an amount from the quantity"
+    it "subtracts an amount from the quantity" do
+      expect {dessert.eat(4)}.to change{dessert.quantity}.to (86)
+    end
 
-    it "raises an error if the amount is greater than the quantity"
+    it "raises an error if the amount is greater than the quantity" do
+      expect {dessert.eat(91)}.to raise_error(RuntimeError, "not enough left!")
+    end
   end
 
   describe "#serve" do
-    it "contains the titleized version of the chef's name"
+    it "contains the titleized version of the chef's name" do
+      expect {dessert.serve}.to include (dessert.chef.capitalize)
+    end
   end
 
   describe "#make_more" do
