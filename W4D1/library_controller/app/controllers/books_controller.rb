@@ -14,7 +14,7 @@ class BooksController < ApplicationController
     # your code here
     @book = Book.new(book_params)
     if @book.save
-      redirect_to books_url
+      redirect_to books_path
     else
       flash.now[:error] = book.error.full_messages
       render :new
@@ -25,7 +25,7 @@ class BooksController < ApplicationController
     # your code here
     @book = Book.find(params[:id])
     @book.destroy
-    redirect_to books_url
+    redirect_to books_path
   end
 
   private
